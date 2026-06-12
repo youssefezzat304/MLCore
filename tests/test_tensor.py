@@ -51,4 +51,17 @@ def test_tensor_repr_contains_tensor_information():
   assert "Tensor" in result
   assert "dtype=float32" in result
   
+def test_tensor_numpy_return_numpy_array():
+  tensor = Tensor(3)
+  
+  assert isinstance(tensor.numpy(), np.ndarray)
+  assert tensor._data == 3
+  
+def test_tensor_numpy_returns_copy():
+  tensor = Tensor([1, 2])
+  
+  array = tensor.numpy()
+  array[0] = 2
+  
+  assert tensor.numpy()[0] == 1
   

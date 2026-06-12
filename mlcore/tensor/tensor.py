@@ -19,6 +19,33 @@ class Tensor:
         NumPy dtype used for internal storage. Defaults to np.float32.
     """
     self._data = self._validate_and_convert(data, dtype)
+    
+  def __repr__(self):
+    return f"Tensor(data={self._data}, dtype={self.dtype})"
+  
+  def numpy(self) -> np.ndarray:
+    """Return a copy of the tensor data as a NumPy array."""
+    return self._data.copy()
+  
+  @property
+  def shape(self) -> tuple[int, ...]:
+    """Shape of the tensor."""
+    return self._data.shape
+  
+  @property
+  def dtype(self) -> np.dtype:
+    """Data type of the tensor elements."""
+    return self._data.dtype
+  
+  @property
+  def ndim(self) -> int:
+    """Number of tensor dimensions."""
+    return self._data.ndim
+  
+  @property
+  def size(self) -> int:
+    """Total number of elements in the tensor."""
+    return self._data.size
   
   @staticmethod 
   def _validate_and_convert(data: Any, dtype: npt.DTypeLike) -> np.ndarray:
@@ -42,26 +69,3 @@ class Tensor:
       )
     
     return array
-  
-  @property
-  def shape(self) -> tuple[int, ...]:
-    """Shape of the tensor."""
-    return self._data.shape
-  
-  @property
-  def dtype(self) -> np.dtype:
-    """Data type of the tensor elements."""
-    return self._data.dtype
-  
-  @property
-  def ndim(self) -> int:
-    """Number of tensor dimensions."""
-    return self._data.ndim
-  
-  @property
-  def size(self) -> int:
-    """Total number of elements in the tensor."""
-    return self._data.size
-  
-  def __repr__(self):
-    return f"Tensor(data={self._data}, dtype={self.dtype})"
