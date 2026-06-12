@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from mlcore.core.tensor.tensor import Tensor
+from mlcore import Tensor
 
 def test_tensor_created_from_scalar():
   tensor = Tensor(3)
