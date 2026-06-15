@@ -55,7 +55,10 @@ def test_tensor_numpy_return_numpy_array():
   tensor = Tensor(3)
   
   assert isinstance(tensor.numpy(), np.ndarray)
-  assert tensor._data == 3
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.array(3, dtype=np.float32)
+  )
   
 def test_tensor_numpy_returns_copy():
   tensor = Tensor([1, 2])
@@ -208,3 +211,34 @@ def test_divide_tensors_supports_broadcasting():
     result.numpy(),
     np.array([1, 2, 3], dtype=np.float32)
   )
+  
+@pytest.mark.parametrize(
+  "operation",
+  [
+    lambda tensor1, tensor2: tensor1 + tensor2,
+    lambda tensor1, tensor2: tensor1 - tensor2,
+    lambda tensor1, tensor2: tensor1 * tensor2,
+    lambda tensor1, tensor2: tensor1 / tensor2
+  ],
+)
+def test_binary_operation_rejects_incompatiable_shapes(operation):
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor([1, 2])
+  
+  with pytest.raises(ValueError):
+    operation(tensor1, tensor2)
+    
+@pytest.mark.parametrize(
+  "operation",
+  [
+    lambda tensor: tensor + 1,
+    lambda tensor: tensor - 1,
+    lambda tensor: tensor * 1,
+    lambda tensor: tensor / 1,
+  ],
+)
+def test_binary_operations_reject_non_tensor_operands(operation):
+  tensor = Tensor([1, 2, 3])
+
+  with pytest.raises(TypeError):
+    operation(tensor)
