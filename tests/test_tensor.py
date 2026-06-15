@@ -64,4 +64,3 @@ def test_tensor_numpy_returns_copy():
   array[0] = 2
   
   assert tensor.numpy()[0] == 1
-  

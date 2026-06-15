@@ -1,4 +1,6 @@
 from __future__ import annotations
+from collections.abc import Callable
+
 from typing import Any
 
 import numpy as np
@@ -21,7 +23,45 @@ class Tensor:
     self._data = self._validate_and_convert(data, dtype)
     
   def __repr__(self):
-    return f"Tensor(data={self._data}, dtype={self.dtype})"
+    return f"""
+            Tensor(data={self._data},
+            dtype={self.dtype})
+            """
+  
+  def __add__(self, other: Tensor) -> Tensor:
+    return self._apply_binary_operation(self, other, np.add, "addition")
+  
+  def __sub__(self, other) -> Tensor:
+    return self._apply_binary_operation(self, other, np.subtract, "subtraction")
+  
+  def __mul__(self, other) -> Tensor:
+    return self._apply_binary_operation(self, other, np.multiply, "multiplication")
+  
+  def __truediv__(self, other) -> Tensor:
+    return self._apply_binary_operation(self, other, np.divide, "division")
+  
+  def _apply_binary_operation(
+    self,
+    other: Tensor,
+    operation: Callable[[np.ndarray, np.ndarray], np.ndarray],
+    operation_name: str
+  ) -> Tensor:
+    """Apply a NumPy binary operation between two tensors"""
+    
+    if not isinstance(other, Tensor):
+      raise TypeError(
+        f"{operation_name.capitalize()} is only supported between Tensor objects."
+      )
+    
+    try:
+      result = operation(self._data, other._data)
+    except ValueError as exc:
+      raise ValueError(
+        f"Tensor shapes are not compatible for {operation_name}: "
+        f"{self.shape} and {other.shape}."
+      ) from exc
+    
+    return Tensor(result)
   
   def numpy(self) -> np.ndarray:
     """Return a copy of the tensor data as a NumPy array."""
