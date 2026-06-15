@@ -221,7 +221,7 @@ def test_divide_tensors_supports_broadcasting():
     lambda tensor1, tensor2: tensor1 / tensor2
   ],
 )
-def test_binary_operation_rejects_incompatiable_shapes(operation):
+def test_binary_operation_rejects_incompatible_shapes(operation):
   tensor1 = Tensor([1, 2, 3])
   tensor2 = Tensor([1, 2])
   
@@ -231,14 +231,32 @@ def test_binary_operation_rejects_incompatiable_shapes(operation):
 @pytest.mark.parametrize(
   "operation",
   [
-    lambda tensor: tensor + 1,
-    lambda tensor: tensor - 1,
-    lambda tensor: tensor * 1,
-    lambda tensor: tensor / 1,
+    lambda tensor: tensor + "hello",
+    lambda tensor: tensor - "hello",
+    lambda tensor: tensor * "hello",
+    lambda tensor: tensor / "hello",
+    lambda tensor: tensor + [1, 2, 3],
   ],
 )
-def test_binary_operations_reject_non_tensor_operands(operation):
+def test_binary_operations_reject_invalid_operands(operation):
   tensor = Tensor([1, 2, 3])
 
   with pytest.raises(TypeError):
     operation(tensor)
+    
+@pytest.mark.parametrize(
+  "operation, expected",
+  [
+    (lambda tensor: tensor + 1, np.array([2, 3, 4], dtype=np.float32)),
+    (lambda tensor: tensor - 1, np.array([0, 1, 2], dtype=np.float32)),
+    (lambda tensor: tensor * 2, np.array([2, 4, 6], dtype=np.float32)),
+    (lambda tensor: tensor / 2, np.array([0.5, 1.0, 1.5], dtype=np.float32)),
+  ],
+)
+def test_binary_operations_support_numeric_scalars(operation, expected):
+  tensor = Tensor([1, 2, 3])
+
+  result = operation(tensor)
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(result.numpy(), expected)

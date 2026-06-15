@@ -28,40 +28,48 @@ class Tensor:
             dtype={self.dtype})
             """
   
-  def __add__(self, other: Tensor) -> Tensor:
+  def __add__(self, other: Tensor | int | float) -> Tensor:
     return self._apply_binary_operation(other, np.add, "addition")
-  
-  def __sub__(self, other) -> Tensor:
+
+  def __sub__(self, other: Tensor | int | float) -> Tensor:
     return self._apply_binary_operation(other, np.subtract, "subtraction")
-  
-  def __mul__(self, other) -> Tensor:
+
+  def __mul__(self, other: Tensor | int | float) -> Tensor:
     return self._apply_binary_operation(other, np.multiply, "multiplication")
-  
-  def __truediv__(self, other) -> Tensor:
+
+  def __truediv__(self, other: Tensor | int | float) -> Tensor:
     return self._apply_binary_operation(other, np.divide, "division")
   
   def _apply_binary_operation(
     self,
-    other: Tensor,
+    other: Tensor | int | float,
     operation: Callable[[np.ndarray, np.ndarray], np.ndarray],
     operation_name: str
   ) -> Tensor:
-    """Apply a NumPy binary operation between two tensors"""
-    
-    if not isinstance(other, Tensor):
-      raise TypeError(
-        f"{operation_name.capitalize()} is only supported between Tensor objects."
-      )
-    
+    """Apply a NumPy binary operation between a tensor and another operand."""
+
+    other_data = self._to_operand_array(other)
+
     try:
-      result = operation(self._data, other._data)
+      result = operation(self._data, other_data)
     except ValueError as exc:
       raise ValueError(
         f"Tensor shapes are not compatible for {operation_name}: "
-        f"{self.shape} and {other.shape}."
+        f"{self.shape} and {other_data.shape}."
       ) from exc
-    
+
     return Tensor(result)
+  
+  def _to_operand_array(self, other: Tensor | int | float) -> np.ndarray:
+    if isinstance(other, Tensor):
+      return other._data
+    
+    if isinstance(other, (int, float)):
+      return np.array(other, dtype=self.dtype)
+    
+    raise TypeError(
+      "Binary operations are only supported between Tensor objects and numeric scalars."
+    )
   
   def numpy(self) -> np.ndarray:
     """Return a copy of the tensor data as a NumPy array."""
