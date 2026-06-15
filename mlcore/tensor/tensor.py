@@ -29,16 +29,16 @@ class Tensor:
             """
   
   def __add__(self, other: Tensor) -> Tensor:
-    return self._apply_binary_operation(self, other, np.add, "addition")
+    return self._apply_binary_operation(other, np.add, "addition")
   
   def __sub__(self, other) -> Tensor:
-    return self._apply_binary_operation(self, other, np.subtract, "subtraction")
+    return self._apply_binary_operation(other, np.subtract, "subtraction")
   
   def __mul__(self, other) -> Tensor:
-    return self._apply_binary_operation(self, other, np.multiply, "multiplication")
+    return self._apply_binary_operation(other, np.multiply, "multiplication")
   
   def __truediv__(self, other) -> Tensor:
-    return self._apply_binary_operation(self, other, np.divide, "division")
+    return self._apply_binary_operation(other, np.divide, "division")
   
   def _apply_binary_operation(
     self,

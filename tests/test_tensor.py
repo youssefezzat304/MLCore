@@ -64,3 +64,147 @@ def test_tensor_numpy_returns_copy():
   array[0] = 2
   
   assert tensor.numpy()[0] == 1
+  
+def test_add_scalar_tensors():
+  tensor1 = Tensor(1)
+  tensor2 = Tensor(1)
+
+  result = tensor1 + tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array(2, dtype=np.float32)
+  )
+
+def test_add_tensors_with_same_shape():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor([1, 1, 1])
+
+  result = tensor1 + tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([2, 3, 4], dtype=np.float32)
+  )
+
+def test_add_tensors_supports_broadcasting():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor(1)
+
+  result = tensor1 + tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([2, 3, 4], dtype=np.float32)
+  )
+
+def test_subtract_scalar_tensors():
+  tensor1 = Tensor(3)
+  tensor2 = Tensor(1)
+
+  result = tensor1 - tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array(2, dtype=np.float32)
+  )
+
+def test_subtract_tensors_with_same_shape():
+  tensor1 = Tensor([3, 4, 5])
+  tensor2 = Tensor([1, 1, 1])
+
+  result = tensor1 - tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([2, 3, 4], dtype=np.float32)
+  )
+
+def test_subtract_tensors_supports_broadcasting():
+  tensor1 = Tensor([3, 4, 5])
+  tensor2 = Tensor(1)
+
+  result = tensor1 - tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([2, 3, 4], dtype=np.float32)
+  )
+
+def test_multiply_scalar_tensors():
+  tensor1 = Tensor(3)
+  tensor2 = Tensor(2)
+
+  result = tensor1 * tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array(6, dtype=np.float32)
+  )
+
+def test_multiply_tensors_with_same_shape():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor([2, 2, 2])
+
+  result = tensor1 * tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([2, 4, 6], dtype=np.float32)
+  )
+
+def test_multiply_tensors_supports_broadcasting():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor(2)
+
+  result = tensor1 * tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([2, 4, 6], dtype=np.float32)
+  )
+
+def test_divide_scalar_tensors():
+  tensor1 = Tensor(6)
+  tensor2 = Tensor(2)
+
+  result = tensor1 / tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array(3, dtype=np.float32)
+  )
+
+def test_divide_tensors_with_same_shape():
+  tensor1 = Tensor([2, 4, 6])
+  tensor2 = Tensor([2, 2, 2])
+
+  result = tensor1 / tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([1, 2, 3], dtype=np.float32)
+  )
+
+def test_divide_tensors_supports_broadcasting():
+  tensor1 = Tensor([2, 4, 6])
+  tensor2 = Tensor(2)
+
+  result = tensor1 / tensor2
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([1, 2, 3], dtype=np.float32)
+  )
