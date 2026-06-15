@@ -260,3 +260,20 @@ def test_binary_operations_support_numeric_scalars(operation, expected):
 
   assert isinstance(result, Tensor)
   np.testing.assert_array_equal(result.numpy(), expected)
+  
+@pytest.mark.parametrize(
+  "operation, expected",
+  [
+    (lambda tensor: 1 + tensor, np.array([2, 3, 4], dtype=np.float32)),
+    (lambda tensor: 1 - tensor, np.array([0, -1, -2], dtype=np.float32)),
+    (lambda tensor: 2 * tensor, np.array([2, 4, 6], dtype=np.float32)),
+    (lambda tensor: 6 / tensor, np.array([6, 3, 2], dtype=np.float32)),
+  ],
+)
+def test_reverse_binary_operations_support_numeric_scalars(operation, expected):
+  tensor = Tensor([1, 2, 3])
+
+  result = operation(tensor)
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(result.numpy(), expected)
