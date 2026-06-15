@@ -40,6 +40,20 @@ class Tensor:
   def __truediv__(self, other: Tensor | int | float) -> Tensor:
     return self._apply_binary_operation(other, np.divide, "division")
   
+  def __radd__(self, other: int | float) -> Tensor:
+    return self.__add__(other)
+
+  def __rmul__(self, other: int | float) -> Tensor:
+    return self.__mul__(other)
+  
+  def __rsub__(self, other):
+    other_data = self._to_operand_array(other)
+    return Tensor(np.subtract(other_data, self._data))
+  
+  def __rtruediv__(self, other):
+    other_data = self._to_operand_array(other)
+    return Tensor(np.divide(other_data, self._data))
+  
   def _apply_binary_operation(
     self,
     other: Tensor | int | float,
