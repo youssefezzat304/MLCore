@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections.abc import Callable
 
-from typing import Any
+from typing import Self, Any
 
 import numpy as np
 import numpy.typing as npt
@@ -46,11 +46,11 @@ class Tensor:
   def __rmul__(self, other: int | float) -> Tensor:
     return self.__mul__(other)
   
-  def __rsub__(self, other):
+  def __rsub__(self, other: Tensor | int | float) -> Tensor:
     other_data = self._to_operand_array(other)
     return Tensor(np.subtract(other_data, self._data))
-  
-  def __rtruediv__(self, other):
+
+  def __rtruediv__(self, other: Tensor | int | float) -> Tensor:
     other_data = self._to_operand_array(other)
     return Tensor(np.divide(other_data, self._data))
   
@@ -60,7 +60,7 @@ class Tensor:
   def __pos__(self) -> Tensor:
     return Tensor(self._data)
   
-  def __eq__(self, value) -> bool:
+  def __eq__(self, value: object) -> bool:
     return (
     isinstance(value, Tensor)
     and self.shape == value.shape
@@ -68,8 +68,33 @@ class Tensor:
     and np.array_equal(self._data, value._data)
   )
   
-  def __ne__(self, value) -> bool:
+  def __ne__(self, value: object) -> bool:
     return not self.__eq__(value)
+
+  @classmethod
+  def zeros(
+    cls,
+    shape: int | tuple[int, ...],
+    dtype: npt.DTypeLike = np.float32,
+  ) -> Self:
+    return cls(np.zeros(shape=shape, dtype=dtype), dtype=dtype)
+
+  @classmethod
+  def ones(
+    cls,
+    shape: int | tuple[int, ...],
+    dtype: npt.DTypeLike = np.float32,
+  ) -> Self:
+    return cls(np.ones(shape=shape, dtype=dtype), dtype=dtype)
+
+  @classmethod
+  def full(
+    cls,
+    shape: int | tuple[int, ...],
+    value: int | float,
+    dtype: npt.DTypeLike = np.float32,
+  ) -> Self:
+    return cls(np.full(shape=shape, fill_value=value, dtype=dtype), dtype=dtype)
   
   def _apply_binary_operation(
     self,

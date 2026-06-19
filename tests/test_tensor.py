@@ -326,8 +326,94 @@ def test_tensor_equality_returns_true_for_equal_tensors():
   assert tensor1 == tensor2
 
 
+def test_tensor_equality_returns_false_for_non_tensor():
+  tensor = Tensor([1, 2, 3])
+
+  assert tensor != [1, 2, 3]
+  assert not tensor == [1, 2, 3]
+
+
+def test_tensor_equality_returns_false_for_different_shape():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor([[1, 2, 3]])
+
+  assert tensor1 != tensor2
+  assert not tensor1 == tensor2
+
+
+def test_tensor_equality_returns_false_for_different_dtype():
+  tensor1 = Tensor([1, 2, 3], dtype=np.float32)
+  tensor2 = Tensor([1, 2, 3], dtype=np.float64)
+
+  assert tensor1 != tensor2
+  assert not tensor1 == tensor2
+
 def test_tensor_inequality_returns_true_for_different_tensors():
   tensor1 = Tensor([1, 2, 3])
   tensor2 = Tensor([1, 2, 4])
 
   assert tensor1 != tensor2
+  
+def test_tensor_zeros_creates_tensor_with_requested_shape():
+  tensor = Tensor.zeros((2, 3))
+
+  assert isinstance(tensor, Tensor)
+  assert tensor.shape == (2, 3)
+  assert tensor.dtype == np.float32
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.zeros((2, 3), dtype=np.float32)
+  )
+
+
+def test_tensor_ones_creates_tensor_with_requested_shape():
+  tensor = Tensor.ones((2, 3))
+
+  assert isinstance(tensor, Tensor)
+  assert tensor.shape == (2, 3)
+  assert tensor.dtype == np.float32
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.ones((2, 3), dtype=np.float32)
+  )
+
+
+def test_tensor_full_creates_tensor_with_requested_fill_value():
+  tensor = Tensor.full((2, 3), 7)
+
+  assert isinstance(tensor, Tensor)
+  assert tensor.shape == (2, 3)
+  assert tensor.dtype == np.float32
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.full((2, 3), 7, dtype=np.float32)
+  )
+  
+def test_tensor_zeros_supports_custom_dtype():
+  tensor = Tensor.zeros((2, 3), dtype=np.float64)
+
+  assert tensor.dtype == np.float64
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.zeros((2, 3), dtype=np.float64)
+  )
+
+
+def test_tensor_ones_supports_custom_dtype():
+  tensor = Tensor.ones((2, 3), dtype=np.float64)
+
+  assert tensor.dtype == np.float64
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.ones((2, 3), dtype=np.float64)
+  )
+
+
+def test_tensor_full_supports_custom_dtype():
+  tensor = Tensor.full((2, 3), 7, dtype=np.float64)
+
+  assert tensor.dtype == np.float64
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.full((2, 3), 7, dtype=np.float64)
+  )
