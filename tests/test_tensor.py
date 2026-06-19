@@ -270,6 +270,8 @@ def test_binary_operations_support_numeric_scalars(operation, expected):
     (lambda tensor: 6 / tensor, np.array([6, 3, 2], dtype=np.float32)),
   ],
 )
+
+
 def test_reverse_binary_operations_support_numeric_scalars(operation, expected):
   tensor = Tensor([1, 2, 3])
 
@@ -277,3 +279,55 @@ def test_reverse_binary_operations_support_numeric_scalars(operation, expected):
 
   assert isinstance(result, Tensor)
   np.testing.assert_array_equal(result.numpy(), expected)
+  
+def test_unary_neg_does_not_modify_original_tensor():
+  tensor = Tensor([1, -2, 3])
+
+  result = -tensor
+
+  np.testing.assert_array_equal(
+    tensor.numpy(),
+    np.array([1, -2, 3], dtype=np.float32)
+  )
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([-1, 2, -3], dtype=np.float32)
+  )
+  
+  
+def test_unary_neg_returns_negated_tensor():
+  tensor = Tensor([1, -2, 3])
+
+  result = -tensor
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([-1, 2, -3], dtype=np.float32)
+  )
+
+
+def test_unary_pos_returns_equivalent_tensor():
+  tensor = Tensor([1, -2, 3])
+
+  result = +tensor
+
+  assert isinstance(result, Tensor)
+  np.testing.assert_array_equal(
+    result.numpy(),
+    np.array([1, -2, 3], dtype=np.float32)
+  )
+
+
+def test_tensor_equality_returns_true_for_equal_tensors():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor([1, 2, 3])
+
+  assert tensor1 == tensor2
+
+
+def test_tensor_inequality_returns_true_for_different_tensors():
+  tensor1 = Tensor([1, 2, 3])
+  tensor2 = Tensor([1, 2, 4])
+
+  assert tensor1 != tensor2

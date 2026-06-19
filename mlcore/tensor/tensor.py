@@ -54,6 +54,23 @@ class Tensor:
     other_data = self._to_operand_array(other)
     return Tensor(np.divide(other_data, self._data))
   
+  def __neg__(self) -> Tensor:
+    return Tensor(-self._data)
+  
+  def __pos__(self) -> Tensor:
+    return Tensor(self._data)
+  
+  def __eq__(self, value) -> bool:
+    return (
+    isinstance(value, Tensor)
+    and self.shape == value.shape
+    and self.dtype == value.dtype
+    and np.array_equal(self._data, value._data)
+  )
+  
+  def __ne__(self, value) -> bool:
+    return not self.__eq__(value)
+  
   def _apply_binary_operation(
     self,
     other: Tensor | int | float,
